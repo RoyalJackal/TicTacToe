@@ -11,9 +11,10 @@ using TicTacToe.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
+    options.UseNpgsql(builder.Environment.IsDevelopment()
+        ? builder.Configuration.GetConnectionString("DefaultConnection")
+        : builder.Configuration["DB_CONNECTION_STRING"]));
 
 builder.Services.AddIdentityCore<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -89,6 +90,16 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 var app = builder.Build();
+
+using var serviceScope = app.Services
+    .GetRequiredService<IServiceScopeFactory>()
+    .CreateScope();
+using var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+
+if (context == null)
+    throw new Exception("context is null");
+
+context.Database.Migrate();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

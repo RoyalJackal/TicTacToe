@@ -4,6 +4,8 @@ using TicTacToe.Services;
 
 namespace TicTacToe.Controllers;
 
+[ApiController]
+[Route("[controller]")]
 public class UserController : ControllerBase
 {
     private readonly UserService _userService;
