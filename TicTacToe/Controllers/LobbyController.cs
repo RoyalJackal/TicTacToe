@@ -20,20 +20,20 @@ public class LobbyController : AuthorizedControllerBase
 
     [HttpGet]
     [Route("all")]
-    [ProducesResponseType(typeof(ListLobbyDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ListLobbyDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<ListLobbyDto>>> GetAll() =>
         Ok(await _lobbyService.GetAllLobbiesAsync());
     
     [HttpGet]
     [Route("open")]
-    [ProducesResponseType(typeof(ListLobbyDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ListLobbyDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<ListLobbyDto>>> GetOpen() =>
         Ok(await _lobbyService.GetOpenLobbiesAsync());
 
     [HttpGet]
     [Authorize]
     [Route("user")]
-    [ProducesResponseType(typeof(ListLobbyDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ListLobbyDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<List<ListLobbyDto>>> GetUser()
     {
